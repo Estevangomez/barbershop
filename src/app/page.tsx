@@ -35,15 +35,15 @@ const Home = () => {
         className="object-cover rounded-xl"
        />
        </div>
-   
-      <Card className="mt-6"> 
+         <h2 className="mt-4 mb-3 text-xs font-bold uppercase text-gray-400">AGENDAMENTOS</h2>
+          <Card> 
           <CardContent className="flex justify-between p-0">
           <div className="flex flex-col gap-2 py-5 pl-5">
             <Badge className="w-fit rounded-full">  
               confirmado
             </Badge>
             <h3 className="font-semibold">Corte de Cabelo</h3>
-            
+           
            <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
               <AvatarImage src="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png"/>

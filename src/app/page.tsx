@@ -6,8 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { db } from "@/app/_lib/prisma";
+import BarbershopItem from "@/components/barbershop-item";
 
-const Home = () => {
+
+const Home = async () => {
+   const barbearias = await db.barbearia.findMany();
+ 
   return (
     <div>    
      <Header />
@@ -25,6 +30,12 @@ const Home = () => {
           <SearchIcon />
         </Button>
        </div>
+
+        <div className="mt-6 flex justify-between items-center">
+         <p>Cabelo</p>
+         <p>Barba</p>
+         <p>Acabamento</p>
+        </div>
 
        <div className="relative w-full h-[150px] mt-4">        
         <Image 
@@ -59,8 +70,17 @@ const Home = () => {
           </div>
           </CardContent>
       </Card>
-     </div>
+
+       <h2 className="mt-4 mb-3 text-xs font-bold uppercase text-gray-400">RECOMENDADOS</h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+            {barbearias.map((barbearia) => (
+                <BarbershopItem key={barbearia.id}  barbearia={barbearia}/>    
+            ))}
+        </div>
+     </div>     
     </div>
+
+    
   );
 }
 

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { SearchIcon } from "lucide-react";
+import { Footprints, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { db } from "@/app/_lib/prisma";
@@ -12,6 +12,11 @@ import BarbershopItem from "@/components/barbershop-item";
 
 const Home = async () => {
    const barbearias = await db.barbearia.findMany();
+    const barbeariasPopulares = await db.barbearia.findMany({
+      orderBy: {
+        nome: "desc",
+      },
+    });
  
   return (
     <div>    
@@ -21,7 +26,7 @@ const Home = async () => {
        Olá, Estevan!
       </h3>
        <p>Sexta Feira, 30 de Janeiro</p>
-       <div className="flex items-center gap-2 mt-2">
+       <div className="flex items-center gap-2 mt-6">
         <Input 
           type="text" 
           placeholder="Buscar serviços ou barbeiros" 
@@ -31,10 +36,48 @@ const Home = async () => {
         </Button>
        </div>
 
-        <div className="mt-6 flex justify-between items-center">
-         <p>Cabelo</p>
-         <p>Barba</p>
-         <p>Acabamento</p>
+        <div className="flex gap-3 mt-6 overflow-auto [&::-webkit-scrollbar]:hidden">
+          <Button className="gap-2" variant="secondary">
+          <Image 
+            src="/cabelo.png" 
+            alt="Cabelo" 
+            width={16} 
+            height={16} 
+          />
+            Cabelo
+          </Button>
+
+          <Button className="gap-2" variant="secondary">
+          <Image 
+            src="/barba.png" 
+            alt="Barba" 
+            width={16} 
+            height={16} 
+          />
+            Barba
+          </Button>
+
+          <Button className="gap-2" variant="secondary">
+          <Image 
+            src="/acabamento.png" 
+            alt="Acabamento" 
+            width={16} 
+            height={16} 
+          />
+            Acabamento
+          </Button>
+
+            <Button className="gap-2" variant="secondary">
+            <Footprints            
+            size={16}
+            width={16} 
+            height={16} 
+          />
+            Pézinho
+          </Button>
+
+
+         
         </div>
 
        <div className="relative w-full h-[150px] mt-4">        
@@ -77,6 +120,18 @@ const Home = async () => {
                 <BarbershopItem key={barbearia.id}  barbearia={barbearia}/>    
             ))}
         </div>
+
+        <h2 className="mt-4 mb-3 text-xs font-bold uppercase text-gray-400">POPULARES</h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+            {barbeariasPopulares.map((barbearia) => (
+                <BarbershopItem key={barbearia.id}  barbearia={barbearia}/>    
+            ))}
+        </div>
+
+        <footer className="mt-10 mb-5 text-center text-sm text-gray-400">
+          © 2024 Barbearia FSW. Todos os direitos reservados.
+        </footer>
+
      </div>     
     </div>
 

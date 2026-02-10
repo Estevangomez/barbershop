@@ -7,6 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import PhoneItem from "@/components/phone-item";
 import { notFound } from "next/navigation";
+import { Sheet } from "@/components/ui/sheet";
+import { SheetTrigger } from "@/components/ui/sheet";
+import SidebarSheet from "@/components/sidebar-sheet";
+
 
 
 interface BarbeariaPageProps {
@@ -41,9 +45,17 @@ const BarbeariaPage = async ({params} : BarbeariaPageProps) => {
                     </Link>
                 </Button>
 
-                 <Button variant="secondary" className="absolute top-4 right-4"> 
-                   <MenuIcon size={20}/>
-                </Button>
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button size="icon" variant="outline" className="absolute top-4 right-4">
+                            <MenuIcon />
+                        </Button>
+                    </SheetTrigger> 
+                    <SidebarSheet />
+                </Sheet>  
+    
+         
+
             </div>
 
            <div className="p-4 border-b border-solid">

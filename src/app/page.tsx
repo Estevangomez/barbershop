@@ -73,11 +73,7 @@ const Home = async () => {
             {barbeariasPopulares.map((barbearia) => (
                 <BarbershopItem key={barbearia.id}  barbearia={barbearia}/>    
             ))}
-        </div>
-
-        <footer className="mt-10 mb-5 text-center text-sm text-gray-400">
-          © 2024 Barbearia FSW. Todos os direitos reservados.
-        </footer>
+        </div>    
 
      </div>     
     </div>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, MapPinIcon, MenuIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import PhoneItem from "@/components/phone-item";
 import { notFound } from "next/navigation";
 
 
@@ -13,6 +14,7 @@ interface BarbeariaPageProps {
         id: string
     }
 }
+const phoneNumber = "(11) 98765-4321";
 
 const BarbeariaPage = async ({params} : BarbeariaPageProps) => {
     const barbearia = await db.barbearia.findUnique({
@@ -66,14 +68,15 @@ const BarbeariaPage = async ({params} : BarbeariaPageProps) => {
 
         <div className="p-5">
             <h2 className="text-xs font-bold uppercase text-gray-400 mb-3">Serviços</h2>
-
             <div className="space-y-3">
             {barbearia?.services.map((service => (
                  <ServiceItem key={service.id} service={service} />
             )))  } 
             </div>
         </div>
-
+        <div className="p-5 space-y-3">
+            <PhoneItem key={phoneNumber}  phone={phoneNumber}/>
+        </div>
         
         </div>
      );

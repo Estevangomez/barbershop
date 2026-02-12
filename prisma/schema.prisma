@@ -5,8 +5,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client" 
-  output   = "./generated/prisma"
+  provider = "prisma-client-js" 
+  //output   = "./generated/prisma"
 
 }
 
@@ -83,5 +83,13 @@ model Session {
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@id([identifier, token])
 }
  

@@ -80,16 +80,21 @@ const SidebarSheet = () => {
             </div>
 
             <div className="flex flex-col p-5 gap-4 border-b border-solid">
-                {quickSearchItems.map((item) => (                           
+                {quickSearchItems.map((item) => (    
+                <SheetClose asChild key={item.label}> 
+                                
                 <Button className="gap-2 justify-start" variant="ghost" key={item.label}>  
-                    <Image 
-                    src={item.icon} 
-                    alt={item.label}
-                    width={16}
-                    height={16}
-                    />
+                     <Link href={`/barbearia?search=${item.label}`} className="flex items-center gap-2">     
+                        <Image 
+                        src={item.icon} 
+                        alt={item.label}
+                        width={16}
+                        height={16}
+                        />
                     {item.label}
+                    </Link>
                 </Button>
+                </SheetClose>
                 )) }                                               
             </div>
             {data?.user ? (<div className="flex flex-col p-5 gap-4 border-b border-solid">

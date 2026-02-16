@@ -6,6 +6,7 @@ import BarbershopItem from "@/components/barbershop-item";
 import { quickSearchItems } from "@/app/_constants/search";
 import AgendamentoItem from "@/components/agendamento-item";
 import SearchItem from "@/components/search";
+import Link from "next/link";
 
 const Home = async () => {
    const barbearias = await db.barbearia.findMany();
@@ -32,7 +33,8 @@ const Home = async () => {
 
         <div className="flex gap-3 mt-6 overflow-auto [&::-webkit-scrollbar]:hidden">
           {quickSearchItems.map((item) => (
-            <Button key={item.label} className="gap-2" variant="secondary">
+            <Button key={item.label} className="gap-2" variant="secondary" asChild>
+              <Link href={`/barbearia?search=${item.label}`} className="flex items-center gap-2">
               <Image 
                 src={item.icon} 
                 alt={item.label} 
@@ -40,6 +42,7 @@ const Home = async () => {
                 height={16} 
               />
                 {item.label}
+                </Link>
             </Button>
           ))}
 

@@ -1,7 +1,6 @@
 import BarbershopItem from "@/components/barbershop-item";
 import { db } from "../_lib/prisma";
 import Header from "@/components/header";
-import { Search } from "lucide-react";
 import SearchItem from "@/components/search";
 
 interface BarbeariaPageProps {

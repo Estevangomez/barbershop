@@ -40,6 +40,9 @@
   * {
     @apply border-border antialiased;
   }
+  html {
+    @apply  h-screen;
+  }
   body {
     @apply bg-background text-foreground antialiased h-screen flex flex-col;
   }

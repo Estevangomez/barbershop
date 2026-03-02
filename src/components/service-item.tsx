@@ -3,7 +3,7 @@ import { Agendamento, Barbearia, Servico } from "@prisma/client";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
@@ -26,7 +26,26 @@ const TIME_LIST = [
     "14:00",
     "15:00",
     "16:00",
+    "17:00",
+    "17:30",
+    "18:00",
 ]
+
+const getTimeList = (agendamentos: Agendamento[]) => { 
+    const timelist = TIME_LIST.filter((time) => {
+
+        const hasAgendamentoOnCurrentTime =  agendamentos.some( agendamento => agendamento.date.getHours() === Number(time.split(":")[0]) 
+            && agendamento.date.getMinutes() === Number(time.split(":")[1]))        
+
+        if(hasAgendamentoOnCurrentTime) {
+            return false;
+        }
+        return true;
+    })
+    return timelist;
+}   
+
+
 
 interface ServiceItemProps {
    service: Servico
@@ -34,12 +53,12 @@ interface ServiceItemProps {
 }
 
 const ServiceItem = ({service, barbearia} : ServiceItemProps) => { 
-       const {data} = useSession();
-        const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
-        const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
-        const [dayAgendamentos, setDayAgendamentos] = useState<Agendamento[]>([])
+    const {data} = useSession();
+    const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
+    const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
+    const [dayAgendamentos, setDayAgendamentos] = useState<Agendamento[]>([])
+    const [agendamentoSheetIsOpen, setAgendamentoSheetIsOpen] = useState(false)
 
-   /* const [isLoading, setIsLoading] = useState(false)*/
 
    useEffect(() => {     
        const fetch = async () => {
@@ -50,6 +69,13 @@ const ServiceItem = ({service, barbearia} : ServiceItemProps) => {
     }
     fetch()
 },[selectedDay, service.barbeariaId, service.id]) 
+
+    const handleAgendamentoSheetOpenChange = () => {
+        setSelectedDay(undefined)
+        setSelectedTime(undefined)       
+
+    }
+ 
     const handleCreateAgendamento = async () => {
         if (!selectedDay || !selectedTime) {
             return;
@@ -77,9 +103,8 @@ const ServiceItem = ({service, barbearia} : ServiceItemProps) => {
         console.error("Erro ao criar agendamento:", error);
         toast.error("Ocorreu um erro ao criar o agendamento. Por favor, tente novamente.")  
     }
-}
-    
-console.log(data)
+}    
+
     const handleDaySelected = (day: Date) => {
         setSelectedDay(day)
     }
@@ -105,12 +130,12 @@ console.log(data)
                     }).format(Number(service?.preco))}
                     </p>
 
-                 <Sheet>
-                    <SheetTrigger asChild> 
-                        <Button variant="secondary" className="ml-auto" size="sm" >
+                 <Sheet open={agendamentoSheetIsOpen} onOpenChange={handleAgendamentoSheetOpenChange}>
+                
+                        <Button variant="secondary" className="ml-auto" size="sm" onClick={() => setAgendamentoSheetIsOpen(true)}>
                             Reservar
                         </Button>                   
-                    </SheetTrigger>
+            
                     <SheetContent>
                         <SheetHeader>
                             <SheetTitle>Fazer Reserva</SheetTitle>
@@ -132,7 +157,7 @@ console.log(data)
                         </div>  
                         {selectedDay && (
                         <div className="px-2 border-b border-solid flex overflow-x-auto gap-2 [&::-webkit-scrollbar]:hidden">
-                            {TIME_LIST.map((time) => (
+                            {getTimeList(dayAgendamentos).map((time) => (
                                 <Button key={time} 
                                  variant= {selectedTime === time ? "default" : "outline"}  
                                  className="rounded-full mb-4"

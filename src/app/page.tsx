@@ -23,10 +23,8 @@ const Home = async () => {
      <h3 className="text-xl font-bold">
        Olá, Estevan!
       </h3>
-       <p>Sexta Feira, 30 de Janeiro</p>
-
-     
-       {/* Input de busca */}
+       <p>Sexta Feira, 30 de Janeiro</p>    
+   
        <div className="mt-6"> 
            <SearchItem />
         </div>

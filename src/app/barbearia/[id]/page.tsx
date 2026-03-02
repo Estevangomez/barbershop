@@ -75,7 +75,7 @@ const BarbeariaPage = async ({params} : BarbeariaPageProps) => {
 
         <div className="p-4 border-b border-solid space-y-3">   
             <h2 className="text-xs font-bold mb-2 uppercase text-gray-400">Sobre nos</h2>
-            <p className="text-sm text-gray-600">Bem-vindo à [Nome da Barbearia]! Aqui, a tradição encontra a modernidade para criar o seu estilo único. Oferecemos cortes clássicos e tendências atuais, cuidados completos com a barba e tratamentos capilares, tudo em um ambiente descontraído e aconchegante. Sinta-se em casa e saia pronto para impressionar. Seu visual é o nosso compromisso</p>
+            <p className="text-sm text-gray-600">Bem-vindo à {barbearia?.nome}! Aqui, a tradição encontra a modernidade para criar o seu estilo único. Oferecemos cortes clássicos e tendências atuais, cuidados completos com a barba e tratamentos capilares, tudo em um ambiente descontraído e aconchegante. Sinta-se em casa e saia pronto para impressionar. Seu visual é o nosso compromisso</p>
         </div>
 
         <div className="p-5">

@@ -12,6 +12,8 @@ import { createAgendamento } from "@/app/_actions/criar_agendamento";
 import { toast } from "sonner";
 import { getAgendamentos } from "@/app/_actions/get_agendamentos";
 import { useSession } from "next-auth/react";
+import { Dialog, DialogContent } from "./ui/dialog";
+import SignInDialog from "./sign-in-dialog";
 
 
 const TIME_LIST = [
@@ -53,6 +55,7 @@ interface ServiceItemProps {
 }
 
 const ServiceItem = ({service, barbearia} : ServiceItemProps) => { 
+    const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false)
     const {data} = useSession();
     const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
     const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
@@ -70,11 +73,19 @@ const ServiceItem = ({service, barbearia} : ServiceItemProps) => {
     fetch()
 },[selectedDay, service.barbeariaId, service.id]) 
 
-    const handleAgendamentoSheetOpenChange = () => {
-        setSelectedDay(undefined)
-        setSelectedTime(undefined)       
-
+    const handleAgendamentoClick =() => {
+        if (data?.user) {
+            return setAgendamentoSheetIsOpen(true);
+        }
+        return setSignInDialogIsOpen(true);
     }
+    const handleAgendamentoSheetOpenChange = (open: boolean) => {
+    setAgendamentoSheetIsOpen(open);
+    if (!open) {
+        setSelectedDay(undefined);
+        setSelectedTime(undefined);
+    }
+}
  
     const handleCreateAgendamento = async () => {
         if (!selectedDay || !selectedTime) {
@@ -112,6 +123,7 @@ const ServiceItem = ({service, barbearia} : ServiceItemProps) => {
         setSelectedTime(time)
     }
     return ( 
+        <>
             <Card>
             <CardContent className="flex items-center gap-3 p-3">
                     
@@ -131,10 +143,14 @@ const ServiceItem = ({service, barbearia} : ServiceItemProps) => {
                     </p>
 
                  <Sheet open={agendamentoSheetIsOpen} onOpenChange={handleAgendamentoSheetOpenChange}>
-                
-                        <Button variant="secondary" className="ml-auto" size="sm" onClick={() => setAgendamentoSheetIsOpen(true)}>
+                        <Button 
+                            variant="secondary" 
+                            className="ml-auto" 
+                            size="sm" 
+                            onClick={handleAgendamentoClick}
+                        >
                             Reservar
-                        </Button>                   
+                        </Button>                 
             
                     <SheetContent>
                         <SheetHeader>
@@ -218,8 +234,17 @@ const ServiceItem = ({service, barbearia} : ServiceItemProps) => {
                 </div>
             </div>
         </CardContent>
-            </Card>
-     );
+    </Card>
+
+<Dialog open={signInDialogIsOpen} onOpenChange={(open) => setSignInDialogIsOpen(open)}>
+<DialogContent className="w-[90%]">
+    <SignInDialog />
+</DialogContent>
+
+</Dialog>
+
+</>
+);
 
 }
 export default ServiceItem; 

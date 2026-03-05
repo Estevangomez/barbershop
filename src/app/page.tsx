@@ -7,15 +7,36 @@ import { quickSearchItems } from "@/app/_constants/search";
 import AgendamentoItem from "@/components/agendamento-item";
 import SearchItem from "@/components/search";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./_lib/auth";
 
 const Home = async () => {
    const barbearias = await db.barbearia.findMany();
+   const session = await getServerSession(authOptions)
     const barbeariasPopulares = await db.barbearia.findMany({
       orderBy: {
         nome: "desc",
       },
     });
  
+    const agendamentos = session?.user ? await db.agendamento.findMany({
+      where: {
+        userId : session?.user.id,
+         date: {
+               gte: new Date()     
+            }
+      },
+      include: {
+        service: {
+          include: {
+            barbearia: true
+          }
+        }
+      },
+      orderBy:{
+        date:"asc"
+      }
+    }) : []
   return (
     <div>    
      <Header />
@@ -46,7 +67,7 @@ const Home = async () => {
 
         </div>
 
-       <div className="relative w-full h-[150px] mt-4">        
+       <div className="relative w-full h-[150px] mt-6">        
         <Image 
         src="/banner-01.png" 
         alt="Banner Promocional" 
@@ -55,8 +76,13 @@ const Home = async () => {
         className="object-cover rounded-xl"
        />
        </div>
+       <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Agendamentos</h2>
+      <div className="flex overflow-x-auto gap-3 [&::-webkit-scrollbar]:hidden">
+            {agendamentos.map((agendamento) => (
+              <AgendamentoItem key={agendamento.id} agendamento={agendamento} />
+            ))}
+      </div>
 
-      <AgendamentoItem />
 
        <h2 className="mt-4 mb-3 text-xs font-bold uppercase text-gray-400">RECOMENDADOS</h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">

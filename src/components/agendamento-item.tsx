@@ -1,32 +1,49 @@
+import {  Prisma } from "@prisma/client";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
+import { format, isFuture } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-//todo: receber agendamento como props
-const AgendamentoItem = () => {
+
+interface AgendamentoItemProps {
+  agendamento: Prisma.AgendamentoGetPayload<{
+    include: {
+      service: {
+        include: {
+          barbearia:true
+      }
+    }}
+  }>
+  
+}
+
+const AgendamentoItem = ({agendamento} : AgendamentoItemProps) => {
+  const isConfirmed = isFuture(agendamento.date)
+  console.log(isConfirmed)
     return ( 
         <>
-        <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">AGENDAMENTOS</h2>
-          <Card> 
+     
+          <Card className="min-w-[90%]"> 
           <CardContent className="flex justify-between p-0">
           <div className="flex flex-col gap-2 py-5 pl-5">
-            <Badge className="w-fit rounded-full">  
-              confirmado
+            <Badge className="w-fit rounded-full" variant={isConfirmed ? "default" : "secondary"}>  
+              {isConfirmed ? "Confirmado" : "Finalizado"}
             </Badge>
-            <h3 className="font-semibold">Corte de Cabelo</h3>
+            <h3 className="font-semibold">{agendamento.service.nome}</h3>
            
            <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
-              <AvatarImage src="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png"/>
+              <AvatarImage src={agendamento.service.barbearia.imageUrl || ""} />
             </Avatar>
-            <p className="text-sm">Barbearia do FSW</p>
+            <p className="text-sm">{agendamento.service.barbearia.nome}</p>
 
            </div>
           </div>
           <div className="flex flex-col items-center justify-center px-5 border-l-2 border-solid">           
-              <p className="font-bold text-sm">Janeiro</p>
-              <p className="text-2xl">05</p>
-              <p className="text-sm">15:00</p>        
+              <p className="font-bold text-sm capitalize">{format(agendamento.date, "MMMM", {locale:ptBR})}</p>
+              <p className="text-2xl">{format(agendamento.date, "dd", {locale:ptBR})}</p>
+              <p className="text-sm">{format(agendamento.date, "HH:mm", {locale:ptBR})}</p>        
           </div>
           </CardContent>
       </Card>

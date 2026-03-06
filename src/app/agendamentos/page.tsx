@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../_lib/auth";
 import { notFound } from "next/navigation";
 import AgendamentoItem from "@/components/agendamento-item";
-import { date } from "zod";
+
 
 const Agendamentos = async () => {
     const session = await getServerSession(authOptions)

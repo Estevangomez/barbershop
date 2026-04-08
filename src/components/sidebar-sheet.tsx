@@ -58,9 +58,11 @@ const SidebarSheet = () => {
                     <Link href="/">Início</Link>                               
                 </Button>
                 </SheetClose>
+                <Link href={`/agendamentos`} className="flex items-center gap-2">     
                 <Button className="gap-2 justify-start" variant="ghost">
                     <Calendar1Icon size={18} />   Agendamentos
-                </Button>                          
+                </Button>  
+                </Link>                        
             </div>
 
             <div className="flex flex-col p-5 gap-4 border-b border-solid">

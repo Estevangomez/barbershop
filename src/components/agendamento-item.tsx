@@ -1,12 +1,18 @@
+"use client"
 import {  Prisma } from "@prisma/client";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 import { format, isFuture } from "date-fns";
-import { ptBR } from "date-fns/locale"; 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { ca, ptBR } from "date-fns/locale"; 
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import Image from "next/image";
 import PhoneItem from "./phone-item";
+import { Button } from "./ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { toast } from "sonner";
+import { deleteAgendamento } from "./delete-agendamento";
+import { useState } from "react";
 
 
 interface AgendamentoItemProps {
@@ -24,9 +30,25 @@ interface AgendamentoItemProps {
 const AgendamentoItem = ({agendamento} : AgendamentoItemProps) => {
   const isConfirmed = isFuture(agendamento.date)
   const phone = "(92) 98463-1508"
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+
+const handleCancelarAgendamento = async () => {
+  try {
+      await deleteAgendamento(agendamento.id)
+      setIsSheetOpen(false)
+      toast.success("Agemdamento Cancelado com sucesso")
+  } catch (error) {
+    console.log(error)
+    toast.error("Erro ao cancelar agendamento: " + error)
+  }
+}
+
+const handleSheetOpenChange = (isOpen: boolean) => {
+  setIsSheetOpen(isOpen)
+}
 const {service: {barbearia}} = agendamento
     return ( 
-      <Sheet>
+      <Sheet open={isSheetOpen} onOpenChange={handleSheetOpenChange}>
         <SheetTrigger className="w-full">
               <Card className="min-w-[90%]"> 
               <CardContent className="flex justify-between p-0">
@@ -52,7 +74,7 @@ const {service: {barbearia}} = agendamento
               </CardContent>
             </Card>
         </SheetTrigger>
-        <SheetContent className="w-[90%]">
+        <SheetContent className="w-[85%]">
           <SheetHeader>
             <SheetTitle className="text-left">Infromações da Reserva</SheetTitle>
           </SheetHeader>
@@ -104,15 +126,61 @@ const {service: {barbearia}} = agendamento
                             </p>
                         </div>
 
-                            <div className="flex items-center justify-between">
-                            <h5 className="text-sm text-gray-400">Barbearia</h5> 
-                              <p className="text-sm text-gray-400">
-                                {barbearia.nome}
-                            </p>
-                        </div>
+                        <div className="flex items-center justify-between">
+                          <h5 className="text-sm text-gray-400">Barbearia</h5> 
+                            <p className="text-sm text-gray-400">
+                              {barbearia.nome}
+                          </p>
+                        </div>              
                 </CardContent>
               </Card>   
              <PhoneItem key={phone} phone={phone} />
+
+            <SheetFooter className="mt-6">
+              <div className="flex items-center gap-3">
+                <SheetClose asChild>
+                    <Button className="w-full" variant="outline">
+                      Voltar
+                    </Button>
+                </SheetClose>       
+
+                  {isConfirmed && (                   
+               
+
+                      <Dialog>
+                        <DialogTrigger className="w-full">
+                             <Button className="w-full" variant="destructive">
+                                Cancelar
+                              </Button>
+                        </DialogTrigger>
+                        <DialogContent className="w-[90%]">
+                          <DialogHeader> 
+                            <DialogTitle>Você deseja cancelar sua reserva ?</DialogTitle>
+                            <DialogDescription>
+                              Ao cancelar, você perderá sua reserva e não poderá recuperá-la. Essa ação é irreversível.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter className="flex flex-row gap-3">
+                            <DialogClose asChild>
+                              <Button variant="secondary" className="w-full">Voltar</Button>
+                            </DialogClose>
+
+                           <DialogClose asChild>
+                            <Button variant="destructive" className="w-full"
+                              onClick={handleCancelarAgendamento}
+                              >Cancelar
+                              </Button>  
+                           </DialogClose>
+
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                  
+                )}                  
+             
+              </div>
+            </SheetFooter>
+
           </div>
         </SheetContent>
         </Sheet>

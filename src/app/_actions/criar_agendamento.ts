@@ -16,7 +16,9 @@ export const createAgendamento = async (params: createAgendamento) => {
     const user = await getServerSession(authOptions)
 
     if (!user?.user) {
+        
         throw new Error("Usuario nao autenticado")
+
     }
     await  db.agendamento.create({
         data: params

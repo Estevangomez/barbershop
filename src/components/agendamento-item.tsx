@@ -4,7 +4,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 import { format, isFuture } from "date-fns";
-import { ca, ptBR } from "date-fns/locale"; 
+import { ptBR } from "date-fns/locale"; 
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import Image from "next/image";
 import PhoneItem from "./phone-item";

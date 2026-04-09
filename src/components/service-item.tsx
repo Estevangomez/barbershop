@@ -6,8 +6,8 @@ import { Card, CardContent } from "./ui/card";
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale";
-import { useEffect, useState } from "react";
-import { format, set } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
+import { format, isPast, isToday, set } from "date-fns";
 import { createAgendamento } from "@/app/_actions/criar_agendamento";
 import { toast } from "sonner";
 import { getAgendamentos } from "@/app/_actions/get_agendamentos";
@@ -33,11 +33,25 @@ const TIME_LIST = [
     "18:00",
 ]
 
-const getTimeList = (agendamentos: Agendamento[]) => { 
-    const timelist = TIME_LIST.filter((time) => {
 
-        const hasAgendamentoOnCurrentTime =  agendamentos.some( agendamento => agendamento.date.getHours() === Number(time.split(":")[0]) 
-            && agendamento.date.getMinutes() === Number(time.split(":")[1]))        
+interface GetTimeListProps {
+    agendamentos: Agendamento[],
+    selectedDay: Date
+}
+
+const getTimeList = ({agendamentos,selectedDay} : GetTimeListProps) => { 
+    const timelist = TIME_LIST.filter((time) => {
+        const hour = Number(time.split(":")[0])
+        const minute = Number(time.split(":")[1])
+        
+        const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes: minute }))
+        
+        if(timeIsOnThePast && isToday(selectedDay)) {
+            return false;
+        }
+
+        const hasAgendamentoOnCurrentTime =  agendamentos.some( agendamento => agendamento.date.getHours() === hour 
+            && agendamento.date.getMinutes() === minute)        
 
         if(hasAgendamentoOnCurrentTime) {
             return false;
@@ -122,6 +136,14 @@ const ServiceItem = ({service, barbearia} : ServiceItemProps) => {
     const handleTimeSelected = (time: string) => {
         setSelectedTime(time)
     }
+
+    const timeList = useMemo(() => {
+        if(!selectedDay) return []
+        return getTimeList({
+        agendamentos: dayAgendamentos,
+        selectedDay
+    })
+    }, [dayAgendamentos, selectedDay])
     return ( 
         <>
             <Card>
@@ -173,14 +195,16 @@ const ServiceItem = ({service, barbearia} : ServiceItemProps) => {
                         </div>  
                         {selectedDay && (
                         <div className="px-2 border-b border-solid flex overflow-x-auto gap-2 [&::-webkit-scrollbar]:hidden">
-                            {getTimeList(dayAgendamentos).map((time) => (
+                            { timeList.length > 0 ? timeList.map((time) => (
                                 <Button key={time} 
                                  variant= {selectedTime === time ? "default" : "outline"}  
                                  className="rounded-full mb-4"
                                  onClick={() => handleTimeSelected(time)}>
                                     {time}
                                 </Button>
-                            ))}
+                            )) :  <p className="text-xs">Nenhum horário disponível
+                            
+                            </p>}
                         </div>  
                         )}
 

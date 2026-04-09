@@ -9,6 +9,8 @@ import SearchItem from "@/components/search";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./_lib/auth";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const Home = async () => {
    const barbearias = await db.barbearia.findMany();
@@ -42,9 +44,9 @@ const Home = async () => {
      <Header />
      <div className="p-5">
      <h3 className="text-xl font-bold">
-       Olá, Estevan!
-      </h3>
-       <p>Sexta Feira, 30 de Janeiro</p>    
+       Olá, {session?.user?.name ? session.user.name.split(" ")[0] : "Bem Vindo"}! 
+      </h3>       
+       <p>{format(new Date(), "EEEE, dd 'de' MMMM", { locale: ptBR })}</p>   
    
        <div className="mt-6"> 
            <SearchItem />

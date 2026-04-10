@@ -1,5 +1,5 @@
 import BarbershopItem from "@/components/barbershop-item";
-import { db } from "../_lib/prisma";
+import { db } from "@/app/_lib/prisma";
 import Header from "@/components/header";
 import SearchItem from "@/components/search";
 
@@ -15,7 +15,7 @@ const BarbeariaPage = async ({searchParams} : BarbeariaPageProps) => {
            services: {
             some: {
                 nome: {
-                    contains: searchParams.search,
+                    contains: searchParams.search ?? "",
                     mode: "insensitive"
                 }
             }      

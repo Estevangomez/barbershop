@@ -85,7 +85,7 @@ const {service: {barbearia}} = agendamento
             <Card className="z-50 w-full mx-5 mb-3 rounded-xl">
               <CardContent className="py-3 px-5 flex items-center gap-3">
                    <Avatar>
-                     <AvatarImage src = {barbearia.imageUrl} />
+                     <AvatarImage src = {barbearia.imageUrl || ""} />
                 </Avatar>
                 <div>
                   <h3 className="font-bold">{barbearia.nome}</h3>

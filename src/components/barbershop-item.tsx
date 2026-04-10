@@ -16,8 +16,8 @@ const BarbershopItem = ({barbearia} : BarbershopItemProps) => {
        <CardContent className="p-0 px-1 pt-1 pb-2">       
            <div className="relative h-[159px] w-full"> 
                 <Image  fill
-                 src={barbearia.imageUrl} 
-                 alt={barbearia.nome} 
+                 src={barbearia?.imageUrl || "/placeholder-image.png"} 
+                 alt={barbearia?.nome || "Barbearia"} 
                  className="object-cover rounded-lg"
                 />
                <Badge className="absolute top-2 left-2 space-x-1" variant="secondary">

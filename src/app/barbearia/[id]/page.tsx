@@ -38,7 +38,7 @@ const BarbeariaPage = async ({params} : BarbeariaPageProps) => {
         <div>
 
             <div className="relative w-full h-[250px]">
-                <Image src={barbearia?.imageUrl} fill alt={barbearia?.nome!} className="object-cover"/>
+                {barbearia?.imageUrl && <Image src={barbearia.imageUrl} fill alt={barbearia?.nome!} className="object-cover"/>}
                 <Button variant="secondary" className="absolute top-4 left-4" asChild> 
                     <Link href="/">     
                          <ChevronLeft size={20}/> 

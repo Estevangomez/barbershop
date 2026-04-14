@@ -78,13 +78,17 @@ const Home = async () => {
         className="object-cover rounded-xl"
        />
        </div>
-       <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Agendamentos</h2>
-      <div className="flex overflow-x-auto gap-3 [&::-webkit-scrollbar]:hidden">
-            {agendamentos.map((agendamento) => (
-              <AgendamentoItem key={agendamento.id} agendamento={agendamento} />
-            ))}
-      </div>
 
+          {agendamentos.length > 0 &&  (          
+            <>
+                <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Agendamentos</h2>   
+                <div className="flex overflow-x-auto gap-3 [&::-webkit-scrollbar]:hidden">
+                  {agendamentos.map((agendamento) => (
+                    <AgendamentoItem key={agendamento.id} agendamento={agendamento} />
+                  ))}
+              </div>              
+            </>
+          )}        
 
        <h2 className="mt-4 mb-3 text-xs font-bold uppercase text-gray-400">RECOMENDADOS</h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
